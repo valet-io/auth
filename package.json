@@ -1,0 +1,18 @@
+{
+  "name": "valet-io-auth",
+  "version": "0.1.0",
+  "description": "Authentication service for managing access tokens",
+  "main": "./src",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valet-io/auth.git"
+  },
+  "author": "Ben Drucker <bvdrucker@gmail.com> (http://www.bendrucker.me/)",
+  "bugs": {
+    "url": "https://github.com/valet-io/auth/issues"
+  },
+  "homepage": "https://github.com/valet-io/auth"
+}
