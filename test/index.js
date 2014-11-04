@@ -3,7 +3,7 @@
 var config = require('../src/config');
 config.set('firebase', {
   secret: 'fbSecret',
-  base: 'fbBase'
+  base: 'https://fbbase'
 });
 config.set('iron', {
   project_id: 'ironProjectId',
@@ -79,7 +79,38 @@ describe('auth', function () {
 
   describe('auth object', function () {
 
+    var auth;
+    before(function () {
+      mock
+        .get('/1/projects/ironProjectId/caches/tokens/items/myToken?oauth=ironToken')
+        .reply(200, {
+          cache: 'tokens',
+          key: 'myToken',
+          value: JSON.stringify({
+            campaign: {
+              id: 'campaignId'
+            }
+          }),
+          cas: 12345,
+          flags: 0,
+          expires: '9999-01-01T00:00:00Z'
+        });
+      return server.injectThen({
+        url: '/',
+        headers: {
+          'X-Valet-Token': 'myToken'
+        }
+      })
+      .then(function (response) {
+        auth = response.result;
+      });
+    });
+
     describe('firebase token', function () {
+
+      it('is included', function () {
+        expect(auth.firebase_token).to.be.a('string');
+      });
 
       it('encodes the campaign id as uid');
 
@@ -87,9 +118,15 @@ describe('auth', function () {
 
     });
 
-    it('includes the firebase endpoint');
+    it('includes the firebase endpoint', function () {
+      expect(auth.firebase_endpoint).to.equal('https://fbbase/campaignId');
+    });
 
-    it('includes the expiration as an ISO-8601 string');
+    it('includes the expiration as an ISO-8601 string', function () {
+      expect(auth.expires_at.toJSON()).to.be.a('string');
+      expect(new Date(auth.expires_at).getTime())
+        .to.be.within(10, Date.now() + 24 * 60 * 60 * 1000);
+    });
 
   })
 

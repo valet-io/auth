@@ -1,7 +1,7 @@
 'use strict';
 
 var config         = require('../config');
-var tokenGenerator = require('firebase-token-generator')(config.get('firebase:secret'));
+var tokenGenerator = new (require('firebase-token-generator'))(config.get('firebase:secret'));
 var wreck          = require('wreck');
 var boom           = require('boom');
 var joi            = require('joi');
@@ -34,8 +34,8 @@ module.exports = function (server) {
           return reply(boom.badImplementation('Unrecognized response'));
         }
         else {
-          var campaign = JSON.parse(payload.value);
-          var expiration = moment.add(24, 'hours');
+          var campaign = JSON.parse(payload.value).campaign;
+          var expiration = moment().add(24, 'hours');
           var token = tokenGenerator.createToken({
             uid: campaign.id
           },
