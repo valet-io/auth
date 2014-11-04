@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- '0.10'
+deploy:
+  provider: heroku
+  api_key:
+    secure: aNasQKn/vk3YJX1WfuM6OcnrJJa6wUdMpSOSo1U8lRFBrVJlCBxDsEdK/qKQ5MeaBfGfnxKB0DVL7ZXGy1HfYzfbneH6KUbG9rLQK/6WBud7mRiPq88Jm45iVDAk+wEU/hdehVwGzKRA+SoSSnogBDO0PeNczURJ43s49JlZVZk=
+  app: valet-io-auth
+  on:
+    all_branches: true
+    tags: true
+    repo: valet-io/auth
