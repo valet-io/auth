@@ -5,7 +5,7 @@ var tokenGenerator = require('firebase-token-generator')(config.get('firebase:se
 var wreck          = require('wreck');
 var boom           = require('boom');
 var joi            = require('joi');
-var path           = require('path');
+var url            = require('url');
 var moment         = require('moment');
 
 module.exports = function (server) {
@@ -13,20 +13,25 @@ module.exports = function (server) {
     method: 'GET',
     path: '/',
     handler: function (request, reply) {
-      wreck.get(path.join(
-        'https://cache-aws-us-east-1.iron.io/1/projects/',
-        config.get('iron:project_id'),
-        'caches',
-        'tokens',
-        'items',
+      wreck.get(
+        'https://cache-aws-us-east-1.iron.io/1/projects/' +
+        config.get('iron:project_id') +
+        '/caches' +
+        '/tokens' +
+        '/items/' +
         request.headers['x-valet-token'] + 
         '?oauth=' + config.get('iron:token')
-      ), {
+      ,
+      {
         json: true
       },
       function (err, response, payload) {
-        if (response.statusCode >= 400) {
+        if (err) return reply(err);
+        if (response.statusCode === 404) {
           return reply(boom.forbidden('Token not found'));
+        }
+        else if (response.statusCode !== 200) {
+          return reply(boom.badImplementation('Unrecognized response'));
         }
         else {
           var campaign = JSON.parse(payload.value);

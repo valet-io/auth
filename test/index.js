@@ -16,8 +16,22 @@ server.pack.register(require('inject-then'), function (err) {
 });
 
 var expect = require('chai').expect;
+var nock   = require('nock');
 
 describe('auth', function () {
+
+  var mock;
+  before(function () {
+    mock = nock('https://cache-aws-us-east-1.iron.io');
+  });
+
+  afterEach(function () {
+    mock.done();
+  });
+
+  after(function () {
+    nock.cleanAll();
+  });
 
   it('rejects requests missing an token', function () {
     return server.injectThen({
@@ -29,7 +43,39 @@ describe('auth', function () {
     });
   });
 
-  it('responds with 403 for invalid tokens');
+  it('responds with 403 for invalid tokens', function () {
+    mock
+      .get('/1/projects/ironProjectId/caches/tokens/items/myToken?oauth=ironToken')
+      .reply(404, {
+        msg: 'Key not found.'
+      });
+    return server.injectThen({
+      url: '/',
+      headers: {
+        'X-Valet-Token': 'myToken'
+      }
+    })
+    .then(function (response) {
+      expect(response.statusCode).to.equal(403);
+    });
+  });
+
+  it('responds with 500 for IronCache errors', function () {
+    mock
+      .get('/1/projects/ironProjectId/caches/tokens/items/myToken?oauth=ironToken')
+      .reply(400, {
+        msg: 'Key not found.'
+      });
+    return server.injectThen({
+      url: '/',
+      headers: {
+        'X-Valet-Token': 'myToken'
+      }
+    })
+    .then(function (response) {
+      expect(response.statusCode).to.equal(500);
+    });
+  });
 
   describe('auth object', function () {
 
