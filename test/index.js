@@ -17,6 +17,7 @@ server.pack.register(require('inject-then'), function (err) {
 
 var expect = require('chai').expect;
 var nock   = require('nock');
+var jwt    = require('jwt-simple');
 
 describe('auth', function () {
 
@@ -112,9 +113,16 @@ describe('auth', function () {
         expect(auth.firebase_token).to.be.a('string');
       });
 
-      it('encodes the campaign id as uid');
+      it('encodes the campaign id as uid', function () {
+        expect(jwt.decode(auth.firebase_token, 'fbSecret'))
+          .to.have.deep.property('d.uid', 'campaignId');
+      });
 
-      it('expires in 24 hours');
+      it('expires in 24 hours', function () {
+        expect(jwt.decode(auth.firebase_token, 'fbSecret'))
+          .to.have.property('exp')
+          .that.equals(Math.floor(new Date(auth.expires_at).getTime() / 1000));
+      });
 
     });
 
