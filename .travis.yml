@@ -10,3 +10,6 @@ deploy:
     all_branches: true
     tags: true
     repo: valet-io/auth
+notifications:
+  slack:
+    secure: blvzPIuYNS4wsTV3Tzy/t1ed2kdMDMGF87tYxinrWWtVYgww0CmNUHv/o/7z57BzJL/aBijvElh7S+0SUkCPscafScy8uTVzxNupaVLHvASrqGP9K5mXbEVChATMV9PnFhYp4Z4hZaMvneysjWPDLiKWlbMrtjzCRMHYYJpZwlo=
