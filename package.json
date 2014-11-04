@@ -1,6 +1,6 @@
 {
   "name": "valet-io-auth",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Authentication service for managing access tokens",
   "main": "./src",
   "scripts": {
