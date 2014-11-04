@@ -4,7 +4,8 @@
   "description": "Authentication service for managing access tokens",
   "main": "./src",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test",
+    "start": "node ./src/start"
   },
   "repository": {
     "type": "git",
