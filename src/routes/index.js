@@ -44,7 +44,7 @@ module.exports = function (server) {
           });
           reply({
             firebase_token: token,
-            firebase_endpoint: path.join(config.get('firebase:base'), campaign.id),
+            firebase_endpoint: url.resolve(config.get('firebase:base'), campaign.id),
             expires_at: expiration
           });
         }
