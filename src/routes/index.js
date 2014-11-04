@@ -49,7 +49,7 @@ module.exports = function (server) {
       validate: {
         headers: joi.object()
           .keys({
-            'X-Valet-Token': joi.string().required()
+            'x-valet-token': joi.string().required()
           })
           .unknown(true)
       }
