@@ -2,6 +2,7 @@
 
 var hapi   = require('hapi');
 var _      = require('lodash');
+var good   = require('good');
 var config = require('./config');
 
 var server = new hapi.Server('0.0.0.0', config.get('PORT'), {
@@ -20,11 +21,11 @@ if (config.get('ssl')) {
 
 
 server.pack.register({
-  plugin: require('good'),
+  plugin: good,
   options: {
-    subscribers: {
-      console: ['request', 'log', 'error']
-    }
+    reporters: [{
+      reporter: good.GoodConsole
+    }]
   }
 }, function (err) {
   if (err) throw err;

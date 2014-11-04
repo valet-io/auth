@@ -11,6 +11,7 @@ var moment         = require('moment');
 module.exports = function (server) {
   server.route({
     method: 'GET',
+    path: '/',
     handler: function (request, reply) {
       wreck.get(path.join(
         'https://cache-aws-us-east-1.iron.io/1/projects/',
